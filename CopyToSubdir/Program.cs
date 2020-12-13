@@ -13,13 +13,14 @@ namespace CopyToSubdir
         }
         static void Main(string[] args)
         {
-            if(args.Length < 3)
+            if(args.Length != 3)
             {
                 Console.WriteLine("Missing argument");
                 Console.WriteLine("");
                 Console.WriteLine();
-                Console.WriteLine("args[0]: filename to copy");
-                Console.WriteLine("args[1]: target directory name (relative to the parent)");
+                Console.WriteLine("args[0]: copy | move");
+                Console.WriteLine("args[1]: filename to copy");
+                Console.WriteLine("args[2]: target directory name (relative to the parent)");
                 return;
             }
 
@@ -39,10 +40,11 @@ namespace CopyToSubdir
             if(string.IsNullOrEmpty(args[2]))
             {
                 Console.WriteLine($"Target directory name is empty");
+                return;
             }
 
             string fileDirectory = Path.GetDirectoryName(filenameToCopy);
-            string targetDirectory = Path.Combine(fileDirectory, args[1]);
+            string targetDirectory = Path.Combine(fileDirectory, args[2]);
 
             if (!Directory.Exists(targetDirectory))
             {
@@ -57,7 +59,14 @@ namespace CopyToSubdir
                 return;
             }
 
-            File.Copy(filenameToCopy, targetFilename);
+            Action<string, string> action = operation switch
+            {
+                OperationType.Copy => File.Copy,
+                OperationType.Move => File.Move,
+                _ => throw new NotImplementedException(),
+            };
+
+            action(filenameToCopy, targetFilename);
         }
     }
 }
