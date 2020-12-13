@@ -12,9 +12,28 @@ namespace CopyToSubdir
         /// Given the filename "Foo.jpg", and a directory, it finds all files with the pattern "Foo.jpg" and "Foo-integer.jpg".
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<string> GetListOfCopies(string directoryPath, string basefilename)
+        public static IEnumerable<string> GetListOfCopies(string directoryPath, string baseFilename)
         {
-            throw new NotImplementedException();
+            if (File.Exists(Path.Combine(directoryPath, baseFilename)))
+            {
+                yield return Path.Combine(directoryPath, baseFilename);
+            }
+
+            int indexOfDot = baseFilename.LastIndexOf(".");
+            if (indexOfDot == -1)
+            {
+                // We require extension, although technically it shouldn't be needed.
+                throw new ArgumentException("Extension is required");
+            }
+
+
+            string filenameNoExtension = baseFilename.Substring(0, indexOfDot);
+            string extension = baseFilename.Substring(indexOfDot + 1);
+
+            foreach(var file in Directory.EnumerateFiles(directoryPath, string.Format(CultureInfo.InvariantCulture, "{0}-*.{1}", filenameNoExtension, extension)))
+            {
+                yield return file;
+            }
         }
 
         /// <summary>

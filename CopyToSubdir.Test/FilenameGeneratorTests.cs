@@ -21,5 +21,12 @@ namespace CopyToSubdir.Test
         {
             Assert.AreEqual("res\\File1-3.txt", FilenameGenerator.GetFirstAvailableName("res", "File1.txt"));
         }
+
+
+        [Test]
+        public void GetAllFilesWithNoGap()
+        {
+            CollectionAssert.AreEqual(new[] { @"res\File1.txt", @"res\File1-2.txt" }, FilenameGenerator.GetListOfCopies("res", "File1.txt"));
+        }
     }
 }
