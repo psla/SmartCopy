@@ -14,3 +14,7 @@ I use it with FastStone Image Viewer.
 1. Add CopyToSubdir as an external program. As parameters, use for example:
  * copy "(filename)" lr-export
  * move "(filename)" not-picked
+
+## Use case
+
+My primary use case right now is to organize files edited in lightroom, in camera, and sometimes in ViewNX in one directory so that I can easily compare them side by side, and then to move the non-selected files to another subdirectory. This also works great with lightroom outputting multiple files with suffix `-$i` whenever you export.
