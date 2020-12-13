@@ -2,8 +2,8 @@
 
 This program allows you to copy/move a file to a selected directory, with some extra checks (on top of "cp") in the future. 
 
-1. If the file is busy (e.g. still opening in your editor) it will by default retry the operation up to 2 seconds, and abort only after that.
-1. If the copied file already exists in the target directory, it does byte-by-byte comparison. If the file is different, it copies/moves the file with the suffix `-2`, `-3` and so on. If the file is the same, for the `copy` operation, it doesn't do anything; for the `move` operation, it removes the source but keeps the destination.
+1. If the file is busy (e.g. still opening in your editor) it will by default retry the operation up to 2 seconds, and abort only after that. (not implemented yet)
+1. If the copied file already exists in the target directory, it does byte-by-byte comparison. If the file is different, it copies/moves the file with the suffix `-2`, `-3` and so on. If the file is the same, for the `copy` operation, it doesn't do anything; for the `move` operation, it removes the source but keeps the destination. (copy operation implemented, move operation doesn't do anything upon duplication)
 
 ## How to use it
 
