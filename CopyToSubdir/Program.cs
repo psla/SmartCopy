@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 namespace CopyToSubdir
 {
@@ -52,12 +53,16 @@ namespace CopyToSubdir
             }
 
             string filename = new FileInfo(filenameToCopy).Name;
-            string targetFilename = Path.Combine(targetDirectory, filename);
-            if(File.Exists(targetFilename))
+
+            
+            string firstMatchingName = FilenameGenerator.GetListOfCopies(targetDirectory, filename).FirstOrDefault(file => FileComparer.AreIdentical(filenameToCopy, file));
+            if (firstMatchingName != null)
             {
-                Console.WriteLine($"Skipping {filename} because it already exists in destination {targetFilename}");
+                Console.WriteLine($"Skipping {filename} because it already exists in destination {firstMatchingName}");
                 return;
             }
+
+            string targetFilename = FilenameGenerator.GetFirstAvailableName(targetDirectory, filename);
 
             Action<string, string> action = operation switch
             {
