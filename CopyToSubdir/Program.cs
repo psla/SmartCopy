@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace CopyToSubdir
 {
@@ -14,7 +15,7 @@ namespace CopyToSubdir
         }
         static void Main(string[] args)
         {
-            if(args.Length != 3)
+            if (args.Length != 3)
             {
                 Console.WriteLine("Missing argument");
                 Console.WriteLine("");
@@ -26,7 +27,7 @@ namespace CopyToSubdir
             }
 
             OperationType operation = OperationType.Copy;
-            if(args.Length == 3)
+            if (args.Length == 3)
             {
                 operation = args[0] == "copy" ? OperationType.Copy : OperationType.Move;
             }
@@ -38,7 +39,7 @@ namespace CopyToSubdir
                 return;
             }
 
-            if(string.IsNullOrEmpty(args[2]))
+            if (string.IsNullOrEmpty(args[2]))
             {
                 Console.WriteLine($"Target directory name is empty");
                 return;
@@ -54,7 +55,7 @@ namespace CopyToSubdir
 
             string filename = new FileInfo(filenameToCopy).Name;
 
-            
+
             string firstMatchingName = FilenameGenerator.GetListOfCopies(targetDirectory, filename).FirstOrDefault(file => FileComparer.AreIdentical(filenameToCopy, file));
             if (firstMatchingName != null)
             {
@@ -71,7 +72,19 @@ namespace CopyToSubdir
                 _ => throw new NotImplementedException(),
             };
 
-            action(filenameToCopy, targetFilename);
+            ExecuteWithRetry(() => action(filenameToCopy, targetFilename));
+        }
+
+        private static void ExecuteWithRetry(Action action)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                try { action(); break; }
+                catch (Exception)
+                {
+                    Thread.Sleep(1000);
+                }
+            }
         }
     }
 }
